@@ -44,3 +44,16 @@ def load_x_test():
 
 def load_x_train():
     return __common_load_df('x_train.csv')
+
+# used in decomposition.py and holt-winter.py
+#   seemed a reasonable place for it
+__data_freq = 10 # minutes
+
+# minutes per week over data freq in minutes
+weekly_freq = int(60*24*7/__data_freq)
+
+# minutes per day over data freq in minutes
+daily_freq = int(60*24/__data_freq)
+
+# minutes per hour over data freq in minutes
+hourly_freq = int(60/__data_freq)

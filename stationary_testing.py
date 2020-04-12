@@ -40,5 +40,9 @@ corr_utils.acf_plot(y_train.to_numpy(), 'dep-train', 200)
 plt.savefig(f'{utils.tmp_graphics_folder}{sep}dep-train-acf-200')
 plt.figure()
 
+corr_utils.acf_plot(y_train.to_numpy(), 'dep-train', 500)
+plt.savefig(f'{utils.tmp_graphics_folder}{sep}dep-train-acf-500')
+plt.figure()
+
 # adf test
 print('ADF Test p-value for dependent training data:', adfuller(y_train.to_numpy().reshape(-1))[1])
