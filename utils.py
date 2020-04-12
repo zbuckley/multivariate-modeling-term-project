@@ -9,8 +9,7 @@ from pathlib import Path # used to setup folders
 from os.path import sep
 
 # Third-Party Dependencies
-import numpy as np
-import matplotlib.pyplot as plt
+import pandas as pd
 
 # folder config/setup
 # This file is provided, but can be downloaded from 
@@ -25,74 +24,23 @@ tmp_data_folder='tmp_data'
 def init_tmp_folders():    
     Path(tmp_graphics_folder).mkdir(parents=True, exist_ok=True)
 
-# Pearson's correlation coefficient estimation as developed 
-#   in lab 2. Renamed
-# def correlation_coefficient_cal(x, y):
-def corr(x, y):
-    # assumes that datasets are of the same length
-    assert(len(x) == len(y))
+# custom dateparser
+dateparser = lambda x: pd.datetime.strptime(x, "%Y-%m-%d %H:%M:%S")
 
-    x_mean = np.mean(x)
-    y_mean = np.mean(y)
+# assumes dataset_info_split.py has been ran
+def __common_load_df(filename):
+    df = pd.read_csv(f'{tmp_data_folder}{sep}{filename}', parse_dates=['date'], date_parser=dateparser)
+    df = df.set_index('date')
+    return df
 
-    numerator = np.sum(
-        np.multiply(
-            np.subtract(x, x_mean),
-            np.subtract(y, y_mean)
-        )
-    )
+def load_y_test():
+    return __common_load_df('y_test.csv')
 
-    denominator = np.sqrt(np.sum(np.power(
-        np.subtract(x, x_mean),
-        2
-    ))) * np.sqrt(np.sum(np.power(
-        np.subtract(y, y_mean),
-        2
-    )))
+def load_y_train():
+    return __common_load_df('y_train.csv')
 
-    return numerator/denominator
+def load_x_test():
+    return __common_load_df('x_test.csv')
 
-
-# 11 - Autocorrelation Function (ACF)
-# python code for estimating AutoCorrelation Function
-#   copied from lab 3
-def autocorrelation_estimation(y, k, y_mean = None):
-    if y_mean == None:
-        y_mean = np.mean(y)
-    
-    # absolute value, as negative k values are symmetric with positive ones
-    #  this makes it much easier to deal with below.
-    k = np.abs(k)
-
-    # length of y
-    T = len(y)
-
-    # initial t of 1st part of numerator summation
-    t0 = k
-
-    # final t of 2nd part of numerator summation
-    t1 = T - k
-    
-    return np.sum (
-        np.multiply(
-            (y[t0:] - y_mean),
-            (y[:t1] - y_mean)
-        )
-    ) / np.sum (
-        np.power(
-            y - y_mean,
-            2
-        )
-    )
-
-# copied and adapted from lab 3
-#  updated to allow caller to manage saving plot
-def acf_plot(residuals, label, k_max):
-    residuals_mean = np.mean(residuals)
-    acf = [(k, autocorrelation_estimation(residuals, k, y_mean=residuals_mean))
-        for k in range(-k_max, k_max + 1)]
-
-    # setting use_line_collection to true hides a deprecation warning
-    plt.stem([a for a, b in acf],
-        [b for a, b in acf])
-    plt.title(f'ACF Plot of Generated Signal\n{label}')
+def load_x_train():
+    return __common_load_df('x_train.csv')

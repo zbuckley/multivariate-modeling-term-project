@@ -1,5 +1,5 @@
-# Exploratory Data Analysis
-#   This file generates the content for the Introduction
+# This file generates the content for the Introduction
+#   and performs the train-test-split
 # Core Python Dependencies
 from os.path import sep # attempts to maintain OS portability
 
@@ -14,13 +14,16 @@ from sklearn.model_selection import train_test_split
 #   specifically for the term project
 #   (provided in additional python files)
 import utils
+import corr_utils
 
 # init_folders takes care of setting up folders for organizing outputs
 utils.init_tmp_folders()
 
 # Need a custom time parser, as the format isn't well-behaved by default.
-mydateparser = lambda x: pd.datetime.strptime(x, "%Y-%m-%d %H:%M:%S")
-df = pd.read_csv(utils.data_source_file, parse_dates=['date'], date_parser=mydateparser)
+df = pd.read_csv(
+    utils.data_source_file,
+    parse_dates=['date'],
+    date_parser=utils.dateparser) # common, custom dateparser
 df = df.set_index('date')
 
 # Basic Info 
@@ -38,11 +41,11 @@ plt.savefig(f'{utils.tmp_graphics_folder}{sep}dep-vs-time')
 plt.figure()
 
 # b - ACF
-utils.acf_plot(df['Appliances'].to_numpy(), 'Appliances', 50)
+corr_utils.acf_plot(df['Appliances'].to_numpy(), 'Appliances', 50)
 plt.savefig(f'{utils.tmp_graphics_folder}{sep}dep-acf-50-lag')
 plt.figure()
 
-utils.acf_plot(df['Appliances'].to_numpy(), 'Appliances', 2000)
+corr_utils.acf_plot(df['Appliances'].to_numpy(), 'Appliances', 2000)
 plt.savefig(f'{utils.tmp_graphics_folder}{sep}def-acf-2000-lag')
 plt.figure()
 
@@ -52,7 +55,7 @@ plt.figure()
 #   previously in the course
 # https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.corr.html
 corr_table = df.corr(
-    method=utils.corr
+    method=corr_utils.corr
 )
 
 # locked color scale bounds, based on theoretical min and max
