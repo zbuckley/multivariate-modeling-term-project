@@ -14,34 +14,33 @@ from statsmodels.tsa.stattools import adfuller
 #   throughout the coursework, or 
 #   specifically for the term project
 #   (provided in additional python files)
-import utils
-import corr_utils
+from utils import conf, data, correlation_utils as cu
 
 # Testing for stationary with the dependent variable
 #   training data only
-y_train = utils.load_y_train()
+y_train = data.load_y_train()
 
 # plt vs time (just training set)
 y_train.plot()
-plt.savefig(f'{utils.tmp_graphics_folder}{sep}dep-train-vs-time')
+plt.savefig(f'{conf.tmp_graphics_folder}{sep}dep-train-vs-time')
 plt.figure()
 
 # histogram
 y_train.hist(bins=100)
-plt.savefig(f'{utils.tmp_graphics_folder}{sep}dep-train-hist')
+plt.savefig(f'{conf.tmp_graphics_folder}{sep}dep-train-hist')
 plt.figure()
 
 # acf plot
-corr_utils.acf_plot(y_train.to_numpy(), 'dep-train', 50)
-plt.savefig(f'{utils.tmp_graphics_folder}{sep}dep-train-acf-50')
+cu.acf_plot(y_train.to_numpy(), 'dep-train', 50)
+plt.savefig(f'{conf.tmp_graphics_folder}{sep}dep-train-acf-50')
 plt.figure()
 
-corr_utils.acf_plot(y_train.to_numpy(), 'dep-train', 200)
-plt.savefig(f'{utils.tmp_graphics_folder}{sep}dep-train-acf-200')
+cu.acf_plot(y_train.to_numpy(), 'dep-train', 200)
+plt.savefig(f'{conf.tmp_graphics_folder}{sep}dep-train-acf-200')
 plt.figure()
 
-corr_utils.acf_plot(y_train.to_numpy(), 'dep-train', 500)
-plt.savefig(f'{utils.tmp_graphics_folder}{sep}dep-train-acf-500')
+cu.acf_plot(y_train.to_numpy(), 'dep-train', 500)
+plt.savefig(f'{conf.tmp_graphics_folder}{sep}dep-train-acf-500')
 plt.figure()
 
 # adf test

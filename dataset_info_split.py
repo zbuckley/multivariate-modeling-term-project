@@ -13,18 +13,13 @@ from sklearn.model_selection import train_test_split
 #   throughout the coursework, or 
 #   specifically for the term project
 #   (provided in additional python files)
-import utils
-import corr_utils
+from utils import conf, data, correlation_utils as cu
 
 # init_folders takes care of setting up folders for organizing outputs
-utils.init_tmp_folders()
+conf.init_tmp_folders()
 
-# Need a custom time parser, as the format isn't well-behaved by default.
-df = pd.read_csv(
-    utils.data_source_file,
-    parse_dates=['date'],
-    date_parser=utils.dateparser) # common, custom dateparser
-df = df.set_index('date')
+# Load dataset, and deal with parsing data information
+df = data.load_original_data()
 
 # Basic Info 
 print('Shape of Dataset:', df.shape)
@@ -37,16 +32,16 @@ df = df.drop(['lights', 'rv1', 'rv2'], axis=1)
 
 # a - plot the dependent variable vs. time
 df['Appliances'].plot()
-plt.savefig(f'{utils.tmp_graphics_folder}{sep}dep-vs-time')
+plt.savefig(f'{conf.tmp_graphics_folder}{sep}dep-vs-time')
 plt.figure()
 
 # b - ACF
-corr_utils.acf_plot(df['Appliances'].to_numpy(), 'Appliances', 50)
-plt.savefig(f'{utils.tmp_graphics_folder}{sep}dep-acf-50-lag')
+cu.acf_plot(df['Appliances'].to_numpy(), 'Appliances', 50)
+plt.savefig(f'{conf.tmp_graphics_folder}{sep}dep-acf-50-lag')
 plt.figure()
 
-corr_utils.acf_plot(df['Appliances'].to_numpy(), 'Appliances', 2000)
-plt.savefig(f'{utils.tmp_graphics_folder}{sep}def-acf-2000-lag')
+cu.acf_plot(df['Appliances'].to_numpy(), 'Appliances', 2000)
+plt.savefig(f'{conf.tmp_graphics_folder}{sep}def-acf-2000-lag')
 plt.figure()
 
 # c - correlation matrix
@@ -55,7 +50,7 @@ plt.figure()
 #   previously in the course
 # https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.corr.html
 corr_table = df.corr(
-    method=corr_utils.corr
+    method=cu.corr
 )
 
 # locked color scale bounds, based on theoretical min and max
@@ -65,7 +60,7 @@ sns.heatmap(
     vmin=-1, vmax=1
 )
 plt.tight_layout() # fixes issue with image bounds cutting off labels
-plt.savefig(f'{utils.tmp_graphics_folder}{sep}corrplot-all-beforesplit')
+plt.savefig(f'{conf.tmp_graphics_folder}{sep}corrplot-all-beforesplit')
 plt.figure()
 
 # d - cleaning procedures
@@ -88,5 +83,5 @@ splits = dict(zip(split_labels, train_test_split(
 # Let's save it all to the data folder
 for label, split in splits.items():
     print(f'{label}:', split.shape, type(split))
-    split.to_csv(f'{utils.tmp_data_folder}{sep}{label}.csv', header=True)
+    split.to_csv(f'{conf.tmp_data_folder}{sep}{label}.csv', header=True)
 
