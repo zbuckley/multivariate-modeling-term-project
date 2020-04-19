@@ -14,7 +14,7 @@ from statsmodels.tsa.stattools import adfuller
 #   throughout the coursework, or 
 #   specifically for the term project
 #   (provided in additional python files)
-import utils.correlation_utils as cu
+from utils.stats import corr, cor_and_ttest, acf_plot
 from utils.data import load_y_train
 from utils.conf import tmp_graphics_folder
 
@@ -33,15 +33,15 @@ plt.savefig(f'{tmp_graphics_folder}{sep}dep-train-hist')
 plt.figure()
 
 # acf plot
-cu.acf_plot(y_train.to_numpy(), 'dep-train', 50)
+acf_plot(y_train.to_numpy(), 'dep-train', 50)
 plt.savefig(f'{tmp_graphics_folder}{sep}dep-train-acf-50')
 plt.figure()
 
-cu.acf_plot(y_train.to_numpy(), 'dep-train', 200)
+acf_plot(y_train.to_numpy(), 'dep-train', 200)
 plt.savefig(f'{tmp_graphics_folder}{sep}dep-train-acf-200')
 plt.figure()
 
-cu.acf_plot(y_train.to_numpy(), 'dep-train', 500)
+acf_plot(y_train.to_numpy(), 'dep-train', 500)
 plt.savefig(f'{tmp_graphics_folder}{sep}dep-train-acf-500')
 plt.figure()
 

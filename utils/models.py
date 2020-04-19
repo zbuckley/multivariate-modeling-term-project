@@ -52,12 +52,6 @@ def ses_trainer(
     alpha=0.5, 
     l_0=0):
 
-    # using component form, and defining l(t) recursively
-    # Update: was limited in num samples it could generate
-    #   due to maximum recursion depth being exceeded. To 
-    #   avoid that problem, let's memoize the results.
-    # Update: well... that didn't work, let's just redefine 
-    #   it as a loop. it'll go faster anyways.
     def l(t):
         _l = alpha * y_data[t] + (1 - alpha) * l_0
         for i in range(t):
@@ -83,10 +77,7 @@ def holt_linear_trainer(
     b_0 = 0.0
 ):
 
-    # using component form, and defining l(t) recursively
-    # this gets really slow... let's speed it up by memoizing
-    # Update: Expecting similar issues, as with the SES implementation
-    #   let's update this to use a for loop.
+    # Below is a for loop which performs the recursive operation iteratively
     def l_b(t):
         l = l_0
         b = b_0
@@ -106,6 +97,7 @@ def holt_linear_trainer(
     return holt_linear_predict
 
 # proxying the statsmodel api to the api i came up with.
+#   Ouch... This takes a long time to fit
 def holt_winters_trainer_full(
     df,
     seasonal='additive',
@@ -113,6 +105,7 @@ def holt_winters_trainer_full(
     seasonal_periods=None):
     
     # optimized ExponentialSmoothing on y_data
+    print('WARNING: This takes a long time. Recommend a coffee break.')
     model = ets.ExponentialSmoothing(
         np.asarray(df),
         dates=np.asarray(df.index),
@@ -123,4 +116,3 @@ def holt_winters_trainer_full(
     def holt_winters_predict(h):
         return model.forecast(h)
     return holt_winters_predict
-

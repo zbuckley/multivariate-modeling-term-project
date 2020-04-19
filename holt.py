@@ -11,13 +11,14 @@ import matplotlib.pyplot as plt
 #   throughout the coursework, or 
 #   specifically for the term project
 #   (provided in additional python files)
-import utils
-import classic_models as mods
+from utils.data import load_y_train, load_y_test, weekly_freq, daily_freq, hourly_freq
+from utils.conf import tmp_graphics_folder
+import utils.models as mods
 
 # Let's load y_train and y_test. 
 #   attempt to fit and predict using a holtwinter model
-y_train = utils.load_y_train()
-y_test = utils.load_y_test()
+y_train = load_y_train()
+y_test = load_y_test()
 
 # Average
 forecast = mods.avg_trainer(y_train)
@@ -46,13 +47,13 @@ forecast = mods.holt_linear_trainer(y_train)
 y_forecasted = forecast(len(y_test))
 y_test['holt_linear_forecast'] = pd.Series(y_forecasted, index=y_test.index)
 
-# Hold-Winter
+# Holt-Winter
 #  This takes a very long time... wow.
-#  TODO: Can we implement our own version of this
-#  TODO: Can we use LMA to optimize for the parameters.
-forecast = mods.holt_winters_trainer_full(y_train, trend=None, seasonal_periods=utils.daily_freq)
+#  TODO: Can we implement our own version of this?
+#  TODO: Can we use LMA to optimize for the parameters? Maybe faster??? hmmm..
+forecast = mods.holt_winters_trainer_full(y_train, trend=None, seasonal_periods=daily_freq)
 y_forecasted = forecast(len(y_test))
-y_test['hold_winter_forecast'] = pd.Series(y_forecasted, index=y_test.index)
+y_test['holt_winter_forecast'] = pd.Series(y_forecasted, index=y_test.index)
 
 
 # plot all the forecasts
@@ -60,7 +61,6 @@ legend = []
 for col in y_test.columns:
     legend.append(col)
     y_test[col].plot()
-
 plt.legend(legend)
-plt.savefig('wat')
+plt.savefig(f'{tmp_graphics_folder}{sep}component-model-forecasts')
 plt.figure()
