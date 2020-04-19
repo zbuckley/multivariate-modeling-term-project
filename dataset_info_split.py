@@ -13,7 +13,7 @@ from sklearn.model_selection import train_test_split
 #   throughout the coursework, or 
 #   specifically for the term project
 #   (provided in additional python files)
-from utils import conf, data, correlation_utils as cu
+from utils import conf, data, stats, visualizations as viz
 
 # init_folders takes care of setting up folders for organizing outputs
 conf.init_tmp_folders()
@@ -36,11 +36,11 @@ plt.savefig(f'{conf.tmp_graphics_folder}{sep}dep-vs-time')
 plt.figure()
 
 # b - ACF
-cu.acf_plot(df['Appliances'].to_numpy(), 'Appliances', 50)
+viz.acf_plot(df['Appliances'].to_numpy(), 'Appliances', 50)
 plt.savefig(f'{conf.tmp_graphics_folder}{sep}dep-acf-50-lag')
 plt.figure()
 
-cu.acf_plot(df['Appliances'].to_numpy(), 'Appliances', 2000)
+viz.acf_plot(df['Appliances'].to_numpy(), 'Appliances', 2000)
 plt.savefig(f'{conf.tmp_graphics_folder}{sep}def-acf-2000-lag')
 plt.figure()
 
@@ -50,7 +50,7 @@ plt.figure()
 #   previously in the course
 # https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.corr.html
 corr_table = df.corr(
-    method=cu.corr
+    method=stats.corr
 )
 
 # locked color scale bounds, based on theoretical min and max
@@ -62,6 +62,13 @@ sns.heatmap(
 plt.tight_layout() # fixes issue with image bounds cutting off labels
 plt.savefig(f'{conf.tmp_graphics_folder}{sep}corrplot-all-beforesplit')
 plt.figure()
+
+# This takes a long time to generate, so we'll comment it out for submission
+#   but it does give a very useful/pretty graphic for analyzing relationships
+#   between variables.
+# sns.pairplot(df, height=10)
+# plt.savefig(f'{conf.tmp_graphics_folder}{sep}large-sns-pairplot-all-data')
+# plt.figure()
 
 # d - cleaning procedures
 print('Info:', df.info())
