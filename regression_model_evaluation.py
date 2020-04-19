@@ -16,8 +16,9 @@ from sklearn.preprocessing import StandardScaler
 #   specifically for the term project
 #   (provided in additional python files)
 from utils.data import load_y_train, load_x_train, load_y_test, load_x_test
-from utils.regression import LinRegModel, print_metrics
+from utils.regression import LinRegModel
 import utils.stats as stats
+from utils.conf import tmp_graphics_folder
 
 # The 2 feature lists we'll give a try based on our previous work.
 features1 = ['T2', 'RH_8', 'T3', 'Windspeed']
@@ -65,7 +66,7 @@ x_train2 = _apply_scaler(
     x_scaler2,
     x_train2
 )
-y_train = _apply_scaler(
+y_train_scaled = _apply_scaler(
     y_scaler,
     y_train
 )
@@ -75,8 +76,8 @@ y_train = _apply_scaler(
 #  we'll have no interecept values.
 model1 = LinRegModel(intercept=False)
 model2 = LinRegModel(intercept=False)
-model1.fit(x_train1, y_train)
-model2.fit(x_train2, y_train)
+model1.fit(x_train1, y_train_scaled)
+model2.fit(x_train2, y_train_scaled)
 
 # Let's print the model summary results
 print('MODEL 1 RESULTS (on transformed data):')
@@ -114,10 +115,32 @@ y_test = y_test.to_numpy().reshape(-1, 1)
 #  another helper function
 print()
 print('Model 1 Test Set Regression Analysis:')
-residuals1 = print_metrics(y_test, y_pred1, x_test1.shape[1], x_train1.shape[0])
+residuals1 = stats.print_metrics(y_test, y_pred1, x_test1.shape[1], x_train1.shape[0])
 stats.acf_plot(residuals1, 'Model 1 Residuals', 20)
+plt.savefig(f'{tmp_graphics_folder}{sep}regression-model-1-residuals-acf')
+plt.figure()
 
 print()
 print('Model 2 Test Set Regression Analysis:')
-residuals2 = print_metrics(y_test, y_pred2, x_test2.shape[1], x_train2.shape[0])
+residuals2 = stats.print_metrics(y_test, y_pred2, x_test2.shape[1], x_train2.shape[0])
 stats.acf_plot(residuals2, 'Model 2 Residuals', 20)
+plt.savefig(f'{tmp_graphics_folder}{sep}regression-model-2-residuals-acf')
+plt.figure()
+
+y_train = y_train.to_numpy().reshape(-1, 1)
+y_test = y_test.reshape(-1, 1)
+y_actuals = np.append(y_train, y_test)
+plt.plot(y_actuals)
+xs = list(range(y_train.shape[0], y_actuals.shape[0]))
+plt.plot(xs, y_pred1)
+plt.title('Regression Model 1 Prediction vs Time')
+plt.legend(['Actual', 'Predicted'])
+plt.savefig(f'{tmp_graphics_folder}{sep}final-regression-model-1-actual-pred-vs-time')
+plt.figure()
+
+plt.plot(y_actuals)
+plt.plot(xs, y_pred2)
+plt.title('Regression Model 2 Prediction vs Time')
+plt.legend(['Actual', 'Predicted'])
+plt.savefig(f'{tmp_graphics_folder}{sep}final-regression-model-2-actual-pred-vs-time')
+plt.figure()

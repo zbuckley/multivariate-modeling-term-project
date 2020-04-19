@@ -14,7 +14,7 @@ from statsmodels.tsa.stattools import adfuller
 #   throughout the coursework, or 
 #   specifically for the term project
 #   (provided in additional python files)
-from utils.data import load_y_train, daily_freq
+from utils.data import load_y_train
 from utils.gpac import gpac
 import utils.visualizations as viz
 from utils.conf import tmp_graphics_folder
@@ -176,9 +176,6 @@ plt.savefig(f'{tmp_graphics_folder}{sep}arma-{ar_order}-{ma_order}-train-trans')
 plt.figure()
 
 # undo transform and check RMSE (against train data)
-pred_y = res.dlsim(y.shape[0])
-
-#     - inverting the transform
 _, y_pred = res.dlsim(
     num_samples=y_trans.shape[0],
     #  provide first (ar_order + 1) values of data to base

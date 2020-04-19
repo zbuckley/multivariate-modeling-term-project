@@ -177,7 +177,7 @@ class LinRegModel():
         print(self.coeffTable())
         print()
         print('Model Metrics:')
-        print_metrics(
+        stats.print_metrics(
             y_pred = predict(self.X, self.B).reshape(-1),
             y_actual = self.Y.reshape(-1),
             num_params = self._p,
