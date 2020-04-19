@@ -16,31 +16,6 @@ from scipy.stats import distributions # used for p-values, and confidence interv
 from .optimization import LSE
 from . import stats
 
-def print_metrics(y_pred, y_actual, num_params, sample_size):
-    r2 = stats.corr(y_actual, y_pred)**2
-    residuals = y_actual - y_pred
-    print('\tR2:', r2)
-    print('\tAdj R2:', stats.adj_r2(r2, y_pred.shape[0]))
-    # Had trouble figuring out how to compute this or associated p-value without 
-    # just building an OLS model from statsmodels library and getting it from the summary
-    # TODO: fix this if time allows.
-    # print('\tF-Statistic:', )
-    # print('\tF-Statistic (probability):', )
-    print('\tAIC:', stats.AIC(sample_size, residuals, num_params))
-    print('\tAICc:', stats.AICc(sample_size, residuals, num_params))
-    print('\tBIC:', stats.BIC(sample_size, residuals, num_params))
-    q = stats.q_value(residuals, sample_size)
-    print('\tQ:', q)
-    print('\tQ (p-value):', stats.q_to_pvalue(q, sample_size))
-    q2 = stats.q_value2(residuals, sample_size)
-    print('\tQ*:', q2)
-    print('\tQ* (p-value):', stats.q_to_pvalue(q, sample_size))
-    print('\tSSE:', stats.sse(residuals))
-    print('\tRMSE:', stats.rmse(residuals))
-    print('\tResidual Mean:', np.mean(residuals))
-    print('\tResidual Var:', np.var(residuals))
-    return residuals
-
 def _convertToNumpy(input):
     retVal = input.to_numpy()
     if len(retVal.shape) == 1:

@@ -1,7 +1,10 @@
 # This file the collection of optimization algorithms
 #   and tools used throughout the course
+# Core Python Dependencies
 
+# Import Third-part Libraries
 import numpy as np
+
 
 def memoize(func):
     cache = {}
@@ -27,3 +30,4 @@ def LSE(X, Y):
         ), 
         Y
     )
+

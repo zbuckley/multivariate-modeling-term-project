@@ -204,3 +204,29 @@ def AICc(T, residuals, k):
 #     adjustment per degrees of freedom or something?
 def BIC(T, residuals, k):
     return T * np.log(sse(residuals) / T) + (k + 2) * np.log(T)
+
+def print_metrics(y_pred, y_actual, num_params, sample_size):
+    r2 = corr(y_actual, y_pred)**2
+    residuals = y_actual - y_pred
+    print('\tR2:', r2)
+    print('\tAdj R2:', adj_r2(r2, y_pred.shape[0]))
+    # Had trouble figuring out how to compute this or associated p-value without 
+    # just building an OLS model from statsmodels library and getting it from the summary
+    # TODO: fix this if time allows.
+    # print('\tF-Statistic:', )
+    # print('\tF-Statistic (probability):', )
+    print('\tAIC:', AIC(sample_size, residuals, num_params))
+    print('\tAICc:', AICc(sample_size, residuals, num_params))
+    print('\tBIC:', BIC(sample_size, residuals, num_params))
+    q = q_value(residuals, sample_size)
+    print('\tQ:', q)
+    print('\tQ (p-value):', q_to_pvalue(q, sample_size))
+    q2 = q_value2(residuals, sample_size)
+    print('\tQ*:', q2)
+    print('\tQ* (p-value):', q_to_pvalue(q, sample_size))
+    print('\tSSE:', sse(residuals))
+    print('\tRMSE:', rmse(residuals))
+    print('\tResidual Mean:', np.mean(residuals))
+    print('\tResidual Var:', np.var(residuals))
+    print('\tResidual std dev:', np.std(residuals))
+    return residuals

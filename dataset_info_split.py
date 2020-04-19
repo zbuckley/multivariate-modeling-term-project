@@ -24,6 +24,12 @@ df = data.load_original_data()
 # Basic Info 
 print('Shape of Dataset:', df.shape)
 
+# This takes a long time to generate, so we'll comment it out for submission
+#   but it does give a very useful/pretty graphic for analyzing relationships
+#   between variables.
+# sns.pairplot(df, height=3)
+# plt.savefig(f'{conf.tmp_graphics_folder}{sep}large-sns-pairplot-all-data')
+# plt.figure()
 
 # Let's drop things that really shouldn't be used to predict
 #  or forecase Application energy use. 
@@ -63,12 +69,6 @@ plt.tight_layout() # fixes issue with image bounds cutting off labels
 plt.savefig(f'{conf.tmp_graphics_folder}{sep}corrplot-all-beforesplit')
 plt.figure()
 
-# This takes a long time to generate, so we'll comment it out for submission
-#   but it does give a very useful/pretty graphic for analyzing relationships
-#   between variables.
-# sns.pairplot(df, height=10)
-# plt.savefig(f'{conf.tmp_graphics_folder}{sep}large-sns-pairplot-all-data')
-# plt.figure()
 
 # d - cleaning procedures
 print('Info:', df.info())
