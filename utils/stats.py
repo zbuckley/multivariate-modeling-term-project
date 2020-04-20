@@ -205,6 +205,17 @@ def AICc(T, residuals, k):
 def BIC(T, residuals, k):
     return T * np.log(sse(residuals) / T) + (k + 2) * np.log(T)
 
+# included as the paper for the dataset uses it.
+#   Mean Absolute Error 
+def mae(residuals):
+    return np.sum(np.abs(residuals))/len(residuals)
+
+
+# included as the paper for the dataset uses it.
+#   Mean Absolute Percentate Error
+def mape(residuals, y):
+    return np.sum(np.divide(np.absolute(residuals), y))
+
 def print_metrics(y_pred, y_actual, num_params, sample_size):
     r2 = corr(y_actual, y_pred)**2
     residuals = y_actual - y_pred
@@ -226,6 +237,8 @@ def print_metrics(y_pred, y_actual, num_params, sample_size):
     print('\tQ* (p-value):', q_to_pvalue(q, sample_size))
     print('\tSSE:', sse(residuals))
     print('\tRMSE:', rmse(residuals))
+    print('\tMAE:', mae(residuals))
+    print('\tMAPE:', mape(residuals, y_actual))
     print('\tResidual Mean:', np.mean(residuals))
     print('\tResidual Var:', np.var(residuals))
     print('\tResidual std dev:', np.std(residuals))

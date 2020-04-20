@@ -6,6 +6,7 @@ from os.path import sep # attempts to maintain OS portability
 # Import Third-part Libraries
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
 
 # Import things developed by me either
 #   throughout the coursework, or 
@@ -14,6 +15,7 @@ import matplotlib.pyplot as plt
 from utils.data import load_y_train, load_y_test, weekly_freq, daily_freq, hourly_freq
 from utils.conf import tmp_graphics_folder
 import utils.models as mods
+import utils.stats as stats
 
 # Let's load y_train and y_test. 
 #   attempt to fit and predict using a holtwinter model
@@ -51,16 +53,42 @@ y_test['holt_linear_forecast'] = pd.Series(y_forecasted, index=y_test.index)
 #  This takes a very long time... wow.
 #  TODO: Can we implement our own version of this?
 #  TODO: Can we use LMA to optimize for the parameters? Maybe faster??? hmmm..
-forecast = mods.holt_winters_trainer_full(y_train, trend=None, seasonal_periods=daily_freq)
-y_forecasted = forecast(len(y_test))
-y_test['holt_winter_forecast'] = pd.Series(y_forecasted, index=y_test.index)
+# forecast = mods.holt_winters_trainer_full(y_train, trend=None, seasonal_periods=int(y_train.shape[0]/daily_freq))
+# y_forecasted = forecast(len(y_test))
+# y_test['holt_winter_forecast'] = pd.Series(y_forecasted, index=y_test.index)
 
 
 # plot all the forecasts
-legend = []
-for col in y_test.columns:
+cols = list(y_test.columns)
+
+y_tmp = y_test['Appliances'].to_numpy().reshape(-1, 1)
+y_train = y_train.to_numpy().reshape(-1, 1)
+y_actual = np.append(y_train, y_tmp)
+xs = list(range(y_train.shape[0], y_actual.shape[0]))
+
+cols.remove('Appliances')
+
+# assuming this should be the number of parameters
+#  applying to the forecast
+#  so i'm ignoring parameters that are 
+#  only used in the fit phase of the model. 
+num_params = {
+    'avg_forecast': 1,
+    'naive_forecast': 1,
+    'drift_forecast': 2,
+    'ses_forecast': 1,
+    'holt_linear_forecast': 2,
+    'holt_winter_forecast': 5
+}
+
+for col in cols:
+    legend = ['Actual']
     legend.append(col)
-    y_test[col].plot()
-plt.legend(legend)
-plt.savefig(f'{tmp_graphics_folder}{sep}component-model-forecasts')
-plt.figure()
+    plt.plot(y_actual)
+    y_tmp2 = y_test[col].to_numpy().reshape(-1, 1)
+    plt.plot(xs, y_tmp2)
+    plt.title(f'Actual and Pred vs Time\n{col}')
+    plt.savefig(f'{col}-actual-pred-vs-time')
+    plt.figure()
+    print('Model Metrics for', col)
+    stats.print_metrics(y_tmp, y_tmp2, num_params[col], y_train.shape[0])

@@ -72,7 +72,7 @@ def ses_trainer(
 def holt_linear_trainer(
     df,
     alpha = 0.5,
-    beta = 0.5,
+    beta = 0.0,
     l_0 = 0.0,
     b_0 = 0.0
 ):

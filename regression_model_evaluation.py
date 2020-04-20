@@ -20,9 +20,17 @@ from utils.regression import LinRegModel
 import utils.stats as stats
 from utils.conf import tmp_graphics_folder
 
-# The 2 feature lists we'll give a try based on our previous work.
-features1 = ['T2', 'RH_8', 'T3', 'Windspeed']
-features2 = ['T2', 'RH_8', 'Windspeed']
+# Model based on filtering by F-test, then incrementally removing
+#  insignificant features based on the t-tests
+features1 = ['lights', 'T2', 'RH_8', 'T3', 'RH_1', 'T5']
+# Model based on the papers choices (uses all the features)
+features2 = [
+    'lights', 'T1', 'RH_1', 'T2', 'RH_2',
+    'T3', 'RH_3', 'T4', 'RH_4', 'T5', 'RH_5',
+    'T6', 'RH_6', 'T7', 'RH_7', 'T8', 'RH_8',
+    'T9', 'RH_9', 'T_out', 'Press_mm_hg', 'RH_out',
+    'Windspeed', 'Tdewpoint', 'NSM'
+]
 
 # Let's setup StandardScaler Transforms for normalizing the data
 #   we'll use the same one transform for the dependent variables
