@@ -45,9 +45,9 @@ print(df['NSM'].head())
 # This takes a long time to generate, so we'll comment it out for submission
 #   but it does give a very useful/pretty graphic for analyzing relationships
 #   between variables.
-sns.pairplot(df, height=3)
-plt.savefig(f'{conf.tmp_graphics_folder}{sep}large-sns-pairplot-all-data')
-plt.figure()
+# sns.pairplot(df, height=3)
+# plt.savefig(f'{conf.tmp_graphics_folder}{sep}large-sns-pairplot-all-data')
+# plt.figure()
 
 # Let's drop things that really shouldn't be used to predict
 #  or forecast Appliance energy use.
@@ -55,17 +55,29 @@ df = df.drop(['rv1', 'rv2'], axis=1)
 
 # a - plot the dependent variable vs. time
 df['Appliances'].plot()
+plt.title('Appliance Energy Consumption vs Time')
+plt.ylabel('Energy Consumption (Wh)')
+plt.xlabel('Time')
+plt.tight_layout()
 plt.savefig(f'{conf.tmp_graphics_folder}{sep}dep-vs-time')
 plt.figure()
 
 # b - ACF
-viz.acf_plot(df['Appliances'].to_numpy(), 'Appliances', 50)
+viz.acf_plot(df['Appliances'].to_numpy(), 'Appliances 20 Lags', 20)
+plt.savefig(f'{conf.tmp_graphics_folder}{sep}dep-acf-20-lag')
+plt.figure()
+
+viz.acf_plot(df['Appliances'].to_numpy(), 'Appliances 50 Lags', 50)
 plt.savefig(f'{conf.tmp_graphics_folder}{sep}dep-acf-50-lag')
 plt.figure()
 
-viz.acf_plot(df['Appliances'].to_numpy(), 'Appliances', 2000)
-plt.savefig(f'{conf.tmp_graphics_folder}{sep}def-acf-2000-lag')
+viz.acf_plot(df['Appliances'].to_numpy(), 'Appliances 200 Lags', 200)
+plt.savefig(f'{conf.tmp_graphics_folder}{sep}def-acf-200-lag')
 plt.figure()
+
+# viz.acf_plot(df['Appliances'].to_numpy(), 'Appliances', 2000)
+# plt.savefig(f'{conf.tmp_graphics_folder}{sep}def-acf-2000-lag')
+# plt.figure()
 
 # c - correlation matrix
 # df.corr takes an optional callable, so let's use 
@@ -100,7 +112,7 @@ splits = dict(zip(split_labels, train_test_split(
     x, 
     y, 
     shuffle=False, 
-    test_size=0.33
+    test_size=0.20
 )))
 
 # f - makes sense... let's check sizes of train and test split
