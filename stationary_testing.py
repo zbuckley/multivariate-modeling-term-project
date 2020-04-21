@@ -24,6 +24,10 @@ y_train = load_y_train()
 
 # plt vs time (just training set)
 y_train.plot()
+plt.title('Appliance Energy Consumption vs Time')
+plt.ylabel('Energy Consumption (Wh)')
+plt.xlabel('Time')
+plt.tight_layout
 plt.savefig(f'{tmp_graphics_folder}{sep}dep-train-vs-time')
 plt.figure()
 
@@ -46,4 +50,4 @@ plt.savefig(f'{tmp_graphics_folder}{sep}dep-train-acf-500')
 plt.figure()
 
 # adf test
-print('ADF Test p-value for dependent training data:', adfuller(y_train.to_numpy().reshape(-1))[1])
+print('ADF Test p-value for dependent training data:', adfuller(y_train.to_numpy().reshape(-1)))
