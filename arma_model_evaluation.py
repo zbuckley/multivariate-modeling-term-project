@@ -41,6 +41,8 @@ y_train_trans, y_train_inverter = transform(y_train)
 # train ARMA(4,3) model
 model = arma.lm(y_train_trans, 4, 3)
 
+model.summary()
+
 # predict using last 4 values of y_train_trans as initial
 #   values, let's see how close we get to the y_test data
 _, y_test_pred = model.dlsim(
@@ -75,6 +77,8 @@ plt.figure()
 
 # train ARMA(1, 0) model
 model = arma.lm(y_train_trans, 1, 0)
+
+model.summary()
 
 # predict using last 4 values of y_train_trans as initial
 #   values, let's see how close we get to the y_test data

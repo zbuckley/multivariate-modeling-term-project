@@ -112,7 +112,7 @@ splits = dict(zip(split_labels, train_test_split(
     x, 
     y, 
     shuffle=False, 
-    test_size=0.20
+    test_size=0.2
 )))
 
 # f - makes sense... let's check sizes of train and test split
