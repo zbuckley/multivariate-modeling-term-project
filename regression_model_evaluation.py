@@ -25,11 +25,7 @@ from utils.conf import tmp_graphics_folder
 features1 = ['lights', 'T2', 'RH_8', 'T3', 'RH_1', 'T5']
 # Model based on the papers choices (uses all the features)
 features2 = [
-    'lights', 'T1', 'RH_1', 'T2', 'RH_2',
-    'T3', 'RH_3', 'T4', 'RH_4', 'T5', 'RH_5',
-    'T6', 'RH_6', 'T7', 'RH_7', 'T8', 'RH_8',
-    'T9', 'RH_9', 'T_out', 'Press_mm_hg', 'RH_out',
-    'Windspeed', 'Tdewpoint', 'NSM'
+    'NSM', 'lights', 'Press_mm_hg', 'RH_5', 'T3', 'RH_3'
 ]
 
 # Let's setup StandardScaler Transforms for normalizing the data

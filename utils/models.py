@@ -107,8 +107,7 @@ def holt_winters_trainer_full(
     # optimized ExponentialSmoothing on y_data
     print('WARNING: This takes a long time. Recommend a coffee break.')
     model = ets.ExponentialSmoothing(
-        np.asarray(df),
-        dates=np.asarray(df.index),
+        df,
         seasonal=seasonal,
         trend=trend,
         seasonal_periods=seasonal_periods

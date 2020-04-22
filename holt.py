@@ -16,6 +16,7 @@ from utils.data import load_y_train, load_y_test, weekly_freq, daily_freq, hourl
 from utils.conf import tmp_graphics_folder
 import utils.models as mods
 import utils.stats as stats
+from utils.arma import compose_transform, logarithmic_transform, normalization_transform
 
 # Let's load y_train and y_test. 
 #   attempt to fit and predict using a holtwinter model
@@ -45,7 +46,7 @@ y_test['ses_forecast'] = pd.Series(y_forecasted, index=y_test.index)
 
 # Holt Linear Method
 #  TODO: Can we use LMA to optimize alpha, beta, l_0, b_0
-forecast = mods.holt_linear_trainer(y_train)
+forecast = mods.holt_linear_trainer(y_train,)
 y_forecasted = forecast(len(y_test))
 y_test['holt_linear_forecast'] = pd.Series(y_forecasted, index=y_test.index)
 
@@ -53,9 +54,16 @@ y_test['holt_linear_forecast'] = pd.Series(y_forecasted, index=y_test.index)
 #  This takes a very long time... wow.
 #  TODO: Can we implement our own version of this?
 #  TODO: Can we use LMA to optimize for the parameters? Maybe faster??? hmmm..
-# forecast = mods.holt_winters_trainer_full(y_train, trend=None, seasonal_periods=int(y_train.shape[0]/daily_freq))
-# y_forecasted = forecast(len(y_test))
-# y_test['holt_winter_forecast'] = pd.Series(y_forecasted, index=y_test.index)
+
+y_train_np = y_train.to_numpy().reshape(-1, 1)
+y_train_scaled, inverter = compose_transform(
+    logarithmic_transform,
+    normalization_transform
+)(y_train_np)
+
+forecast = mods.holt_winters_trainer_full(y_train_scaled, trend=None, seasonal_periods=int(daily_freq))
+y_forecasted = forecast(len(y_test))
+y_test['holt_winter_forecast'] = pd.Series(inverter(y_forecasted), index=y_test.index)
 
 
 # plot all the forecasts
@@ -73,12 +81,13 @@ cols.remove('Appliances')
 #  so i'm ignoring parameters that are 
 #  only used in the fit phase of the model. 
 num_params = {
-    'avg_forecast': 1,
-    'naive_forecast': 1,
-    'drift_forecast': 2,
-    'ses_forecast': 1,
-    'holt_linear_forecast': 2,
-    'holt_winter_forecast': 5
+    'avg_forecast': 0,
+    'naive_forecast': 0,
+    'drift_forecast': 0,
+    'ses_forecast': 2,
+    'holt_linear_forecast': 4,
+    'holt_winter_forecast': 6,
+    'holt_winter_forecast_normalization': 6
 }
 
 for col in cols:
@@ -88,7 +97,7 @@ for col in cols:
     y_tmp2 = y_test[col].to_numpy().reshape(-1, 1)
     plt.plot(xs, y_tmp2)
     plt.title(f'Actual and Pred vs Time\n{col}')
-    plt.savefig(f'{col}-actual-pred-vs-time')
+    plt.savefig(f'{tmp_graphics_folder}{sep}{col}-actual-pred-vs-time')
     plt.figure()
     print('Model Metrics for', col)
     stats.print_metrics(y_tmp, y_tmp2, num_params[col], y_train.shape[0])

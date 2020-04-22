@@ -217,10 +217,10 @@ def mape(residuals, y):
     return np.sum(np.divide(np.absolute(residuals), y))
 
 def print_metrics(y_pred, y_actual, num_params, sample_size):
-    r2 = corr(y_actual, y_pred)**2
+    r2 = np.nan_to_num(corr(y_actual, y_pred)**2)
     residuals = y_actual - y_pred
     print('\tR2:', r2)
-    print('\tAdj R2:', adj_r2(r2, y_pred.shape[0]))
+    print('\tAdj R2:', np.nan_to_num(adj_r2(r2, y_pred.shape[0])))
     # Had trouble figuring out how to compute this or associated p-value without 
     # just building an OLS model from statsmodels library and getting it from the summary
     # TODO: fix this if time allows.

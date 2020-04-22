@@ -283,16 +283,8 @@ fit_and_eval(model, x_train1, y_train_scaled, y_train, y_scaler)
 #  from the sklearn package. 
 # Let's use the features identified in the paper, as those to use
 #  for a linear regression model, and see if our outcome matches.
-# NOTE: I am missing 2 engineered features
-#   'WeekStatus', and 'Day of Week' as those are both categorical.
-#   And my linear regression model, isn't setup to handle it.
-# NOTE: This list is all the features, except rv1, and rv2
 features_paper=[
-    'lights', 'T1', 'RH_1', 'T2', 'RH_2',
-    'T3', 'RH_3', 'T4', 'RH_4', 'T5', 'RH_5',
-    'T6', 'RH_6', 'T7', 'RH_7', 'T8', 'RH_8',
-    'T9', 'RH_9', 'T_out', 'Press_mm_hg', 'RH_out',
-    'Windspeed', 'Tdewpoint', 'NSM'
+    'NSM', 'lights', 'Press_mm_hg', 'RH_5', 'T3', 'RH_3'
 ]
 
 x_train_paper = x_train[features_paper]

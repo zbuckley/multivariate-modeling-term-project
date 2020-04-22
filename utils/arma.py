@@ -507,10 +507,9 @@ def difference_transform(data):
 
 def logarithmic_transform(data):
     def logarithmic_inverse(pred):
-        return np.exp(pred)
+        return np.power(10, pred)
     
-    return np.log(data), logarithmic_inverse
-
+    return np.log10(data), logarithmic_inverse
 
 def normalization_transform(data):
     variance = np.var(data)
