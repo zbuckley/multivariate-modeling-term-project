@@ -63,8 +63,12 @@ y_train_scaled, inverter = compose_transform(
 
 forecast = mods.holt_winters_trainer_full(y_train_scaled, trend=None, seasonal_periods=int(daily_freq))
 y_forecasted = forecast(len(y_test))
-y_test['holt_winter_forecast'] = pd.Series(inverter(y_forecasted), index=y_test.index)
+y_test['holt_winter_forecast_daily'] = pd.Series(inverter(y_forecasted), index=y_test.index)
 
+
+forecast = mods.holt_winters_trainer_full(y_train_scaled, trend=None, seasonal_periods=int(weekly_freq))
+y_forecasted = forecast(len(y_test))
+y_test['holt_winter_forecast_weekly'] = pd.Series(inverter(y_forecasted), index=y_test.index)
 
 # plot all the forecasts
 cols = list(y_test.columns)
@@ -86,8 +90,8 @@ num_params = {
     'drift_forecast': 0,
     'ses_forecast': 2,
     'holt_linear_forecast': 4,
-    'holt_winter_forecast': 6,
-    'holt_winter_forecast_normalization': 6
+    'holt_winter_forecast_daily': 6,
+    'holt_winter_forecast_weekly': 6
 }
 
 for col in cols:
